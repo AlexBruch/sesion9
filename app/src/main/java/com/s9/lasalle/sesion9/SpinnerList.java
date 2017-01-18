@@ -29,4 +29,18 @@ public class SpinnerList {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    @Override
+    public String toString() {
+        return url;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof SpinnerList) {
+            SpinnerList list = (SpinnerList) obj;
+            if (list.getUrl().equals(url)&& list.getId()==id) return true;
+        }
+        return false;
+    }
 }
