@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
+    WebView webview = (WebView) findViewById(R.id.webview);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         /***** SPINNER *****/
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        WebView webview = (WebView) findViewById(R.id.webview);
 
         ArrayList<SpinnerList> spinnerList = new ArrayList<>();
         spinnerList.add(new SpinnerList("0", "http://developer.android.com/index.html"));
@@ -91,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(DownloadService.DOWNLOAD_ACTION)) {
+
+                String urlContent = intent.getStringExtra("Content");
+                webview.loadData(urlContent, "text/html; charset=UTF-8", null);
 
             } else if(intent.getAction().equals(DownloadService.END_ACTION)) {
                 Toast.makeText(getApplicationContext(), "END", Toast.LENGTH_SHORT).show();

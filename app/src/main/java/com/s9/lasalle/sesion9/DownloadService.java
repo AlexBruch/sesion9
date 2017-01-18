@@ -30,7 +30,10 @@ public class DownloadService extends IntentService {
 
             if(DOWNLOAD_ACTION.equals(action)) {
                 final String URLparam = intent.getStringExtra("Urlparam");
-                handleDownloadAction(URLparam);
+
+                String recivedParam = handleDownloadAction(URLparam);
+                intent.putExtra("content", recivedParam);
+
             } else if (END_ACTION.equals(action)){
                 handleEndAction();
             }
@@ -38,7 +41,7 @@ public class DownloadService extends IntentService {
 
     }
 
-    private void handleDownloadAction(String urlParam) {
+    private String handleDownloadAction(String urlParam) {
         try {
             URL url = new URL(urlParam);
             URLConnection urlConnection = url.openConnection();
@@ -55,13 +58,17 @@ public class DownloadService extends IntentService {
             bufferedInputStream.close();
 
             String URLContent = stringBuilder.toString();
+
             Log.e("Content", URLContent);
+
+            return URLContent;
 
         }catch (MalformedURLException e) {
             e.printStackTrace();
         }catch (IOException e) {
             e.printStackTrace();
         }
+        return "";
     }
 
     private void handleEndAction(){
