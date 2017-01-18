@@ -11,7 +11,33 @@
     tools:context="com.s9.lasalle.sesion9.MainActivity">
 
     <TextView
+        android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/textView" />
+
+    <Button
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/button" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:layout_alignBottom="@+id/button"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/button" />
+
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/spinner"
+        android:layout_alignParentStart="true"
+        android:id="@+id/webview" />
+
 </RelativeLayout>
