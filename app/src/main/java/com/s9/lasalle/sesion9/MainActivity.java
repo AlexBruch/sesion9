@@ -1,5 +1,9 @@
 package com.s9.lasalle.sesion9;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +11,7 @@ import android.webkit.WebView;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -19,6 +24,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SpinnerButton();
+
+        /***** REGISTRAR ACCONES Y FILTROS *****/
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(DownloadService.DOWNLOAD_ACTION);
+        intentFilter.addAction(DownloadService.END_ACTION);
+
+        DownloadProgressReciver downloadProgressReciver = new DownloadProgressReciver();
+        registerReceiver(downloadProgressReciver, intentFilter);
+
+    }
+
+    public void SpinnerButton() {
 
         /***** SPINNER *****/
 
@@ -38,11 +58,25 @@ public class MainActivity extends AppCompatActivity {
                 spinnerList);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            /***** PER DETECTAR QUINA ÉS LA URL ESCOLLIDA A SPINNER *****/
+            public SpinnerList spinnerItems;
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                final SpinnerList spinnerItems = (SpinnerList) adapterView.getSelectedItem();
-                //Toast toast = Toast.makeText(getApplicationContext(), spinnerItems.getText(), Toast.LENGTH_SHORT);
-               // toast.show();
+                spinnerItems = (SpinnerList) adapterView.getSelectedItem();
+                Toast.makeText(getApplicationContext(), spinnerItems.getUrl(), Toast.LENGTH_SHORT).show();
+
+                /***** DOWNLOAD BUTTON *****/
+
+                Button button = (Button) findViewById(R.id.button);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent downloadIntent = new Intent(getApplicationContext(), DownloadService.class);
+                        downloadIntent.putExtra("Urlparam", spinnerItems.getUrl());
+                        startService(downloadIntent);
+                    }
+                });
             }
 
             @Override
@@ -51,5 +85,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public class DownloadProgressReciver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals(DownloadService.DOWNLOAD_ACTION)) {
+
+            } else if(intent.getAction().equals(DownloadService.END_ACTION)) {
+                Toast.makeText(getApplicationContext(), "END", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
