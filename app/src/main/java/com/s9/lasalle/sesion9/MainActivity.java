@@ -18,8 +18,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.s9.lasalle.sesion9.R.id.webview;
+
 public class MainActivity extends AppCompatActivity {
-    WebView webview = (WebView) findViewById(R.id.webview);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent downloadIntent = new Intent(getApplicationContext(), DownloadService.class);
                         downloadIntent.putExtra("Urlparam", spinnerItems.getUrl());
                         startService(downloadIntent);
+                        Toast.makeText(getApplicationContext(), spinnerItems.getUrl(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -92,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
             if(intent.getAction().equals(DownloadService.DOWNLOAD_ACTION)) {
 
                 String urlContent = intent.getStringExtra("Content");
+                WebView webview = (WebView) findViewById(R.id.webview);
                 webview.loadData(urlContent, "text/html; charset=UTF-8", null);
 
             } else if(intent.getAction().equals(DownloadService.END_ACTION)) {
