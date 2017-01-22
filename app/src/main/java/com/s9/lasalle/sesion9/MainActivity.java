@@ -18,8 +18,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.s9.lasalle.sesion9.R.id.spinner;
-import static com.s9.lasalle.sesion9.R.id.webview;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+        button = (Button) findViewById(R.id.button);
+        webview = (WebView) findViewById(R.id.webview);
 
         SpinnerButton();
 
@@ -49,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
         /***** SPINNER *****/
 
-        spinner = (Spinner) findViewById(R.id.spinner);
-
         ArrayList<SpinnerList> spinnerList = new ArrayList<>();
         spinnerList.add(new SpinnerList("0", "http://developer.android.com/index.html"));
         spinnerList.add(new SpinnerList("1", "http://www.salleurl.edu/"));
@@ -66,20 +66,19 @@ public class MainActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             /***** PER DETECTAR QUINA ÉS LA URL ESCOLLIDA A SPINNER *****/
-            public SpinnerList spinnerItems;
+            public SpinnerList spinnerItem;
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                spinnerItems = (SpinnerList) adapterView.getSelectedItem();
-                Toast.makeText(getApplicationContext(), spinnerItems.getUrl(), Toast.LENGTH_SHORT).show();
+                spinnerItem = (SpinnerList) adapterView.getSelectedItem();
+                Toast.makeText(getApplicationContext(), spinnerItem.getUrl(), Toast.LENGTH_SHORT).show();
 
                 /***** DOWNLOAD BUTTON *****/
 
-                button = (Button) findViewById(R.id.button);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent downloadIntent = new Intent(getApplicationContext(), DownloadService.class);
-                        downloadIntent.putExtra("Urlparam", spinnerItems.getUrl());
+                        downloadIntent.putExtra("Urlparam", spinnerItem.getUrl());
                         startService(downloadIntent);
                         Toast.makeText(getApplicationContext(), "Downloading", Toast.LENGTH_SHORT).show();
                     }
@@ -100,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             if(intent.getAction().equals(DownloadService.DOWNLOAD_ACTION)) {
 
                 String urlContent = intent.getStringExtra("Content");
-                webview = (WebView) findViewById(R.id.webview);
+
                 webview.loadData(urlContent, "text/html; charset=UTF-8", null);
 
             } else if(intent.getAction().equals(DownloadService.END_ACTION)) {
