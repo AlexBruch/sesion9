@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(DownloadService.DOWNLOAD_ACTION)) {
 
-                String urlContent = intent.getStringExtra("Content");
+                String urlContent = intent.getStringExtra("content");
 
                 webview.loadData(urlContent, "text/html; charset=UTF-8", null);
 
