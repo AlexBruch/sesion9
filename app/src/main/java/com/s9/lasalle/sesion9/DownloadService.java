@@ -25,14 +25,24 @@ public class DownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        intent.setAction(DOWNLOAD_ACTION);
+
         if (intent != null) {
             final String action = intent.getAction();
 
             if(DOWNLOAD_ACTION.equals(action)) {
                 final String URLparam = intent.getStringExtra("Urlparam");
 
-                String recivedParam = handleDownloadAction(URLparam);
-                intent.putExtra("content", recivedParam);
+                String receivedParam = handleDownloadAction(URLparam);
+
+                Intent downloadIntent = new Intent();
+                downloadIntent.setAction(DOWNLOAD_ACTION);
+                downloadIntent.putExtra("content", receivedParam);
+                sendBroadcast(downloadIntent);
+
+                Intent endIntent = new Intent();
+                endIntent.setAction(END_ACTION);
+                sendBroadcast(endIntent);
 
             } else if (END_ACTION.equals(action)){
                 handleEndAction();
@@ -60,7 +70,7 @@ public class DownloadService extends IntentService {
             String URLContent = stringBuilder.toString();
 
             Log.e("Content", URLContent);
-
+            /** Enviar a la activity una vez descargado **/
             return URLContent;
 
         }catch (MalformedURLException e) {

@@ -18,9 +18,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.s9.lasalle.sesion9.R.id.spinner;
 import static com.s9.lasalle.sesion9.R.id.webview;
 
 public class MainActivity extends AppCompatActivity {
+
+    Button button;
+    WebView webview;
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
         intentFilter.addAction(DownloadService.DOWNLOAD_ACTION);
         intentFilter.addAction(DownloadService.END_ACTION);
 
-        DownloadProgressReciver downloadProgressReciver = new DownloadProgressReciver();
-        registerReceiver(downloadProgressReciver, intentFilter);
+        DownloadProgressReceiver downloadProgressReceiver = new DownloadProgressReceiver();
+        registerReceiver(downloadProgressReceiver, intentFilter);
 
     }
 
@@ -44,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         /***** SPINNER *****/
 
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        spinner = (Spinner) findViewById(R.id.spinner);
 
         ArrayList<SpinnerList> spinnerList = new ArrayList<>();
         spinnerList.add(new SpinnerList("0", "http://developer.android.com/index.html"));
@@ -69,14 +74,14 @@ public class MainActivity extends AppCompatActivity {
 
                 /***** DOWNLOAD BUTTON *****/
 
-                Button button = (Button) findViewById(R.id.button);
+                button = (Button) findViewById(R.id.button);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent downloadIntent = new Intent(getApplicationContext(), DownloadService.class);
                         downloadIntent.putExtra("Urlparam", spinnerItems.getUrl());
                         startService(downloadIntent);
-                        Toast.makeText(getApplicationContext(), spinnerItems.getUrl(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Downloading", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -89,13 +94,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public class DownloadProgressReciver extends BroadcastReceiver {
+    public class DownloadProgressReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getAction().equals(DownloadService.DOWNLOAD_ACTION)) {
 
                 String urlContent = intent.getStringExtra("Content");
-                WebView webview = (WebView) findViewById(R.id.webview);
+                webview = (WebView) findViewById(R.id.webview);
                 webview.loadData(urlContent, "text/html; charset=UTF-8", null);
 
             } else if(intent.getAction().equals(DownloadService.END_ACTION)) {
